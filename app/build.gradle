@@ -1,0 +1,66 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+
+android {
+
+    defaultConfig {
+        applicationId "com.vk.superapp.platform"
+        minSdk minSdkSakVersion
+        compileSdk compileSdkSakVersion
+        targetSdk targetSdkSakVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        common {
+            storeFile file("platform-key.keystore")
+            storePassword "platformSAK"
+            keyAlias "platformSample"
+            keyPassword "platformSAK"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            signingConfig signingConfigs.common
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.common
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+repositories {
+    maven {
+        url("https://artifactory-external.vkpartner.ru/artifactory/superappkit-maven-public/")
+    }
+}
+
+// For VkExternalAuthRedirectScheme use template vk<com_vk_sdk_AppId>
+// Example: 'VkExternalAuthRedirectScheme' : 'vk123467',
+android.defaultConfig.manifestPlaceholders = [
+        'VkExternalAuthRedirectScheme' : '',
+        'VkExternalAuthRedirectHost' : 'vk.com',
+]
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}"
+    implementation "com.vk.superappkit:superappkit-pub:${sakVersion}"
+    implementation "com.vk.superappkit:oauth-vk:${sakVersion}"
+}
