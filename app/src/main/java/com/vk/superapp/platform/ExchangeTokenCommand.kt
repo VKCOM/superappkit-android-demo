@@ -27,6 +27,9 @@
  */
 package com.vk.superapp.platform
 
+import android.content.Context
+import android.util.Log
+import com.vk.api.sdk.VK
 import com.vk.auth.main.SilentAuthSource
 import com.vk.auth.main.VkFastLoginModifiedUser
 import com.vk.auth.main.VkSilentTokenExchanger
@@ -38,7 +41,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
 
-class VkSilentTokenExchangerImpl : VkSilentTokenExchanger {
+class VkSilentTokenExchangerImpl(private val context: Context) : VkSilentTokenExchanger {
     override fun exchangeSilentToken(
         user: SilentAuthInfo, modifiedUser: VkFastLoginModifiedUser?, source: SilentAuthSource
     ): VkSilentTokenExchanger.Result {
@@ -63,14 +66,21 @@ class VkSilentTokenExchangerImpl : VkSilentTokenExchanger {
         silentToken: String,
         uuid: String
     ): JSONObject {
-        val yourEndpoint = "https://api.vk.com/method/auth.exchangeSilentAuthToken"
-        val yourServiceToken = SuperappApiCore.apiManager.anonymTokenManager.provide()
-        val postQuery = "access_token=${yourServiceToken}&token=${silentToken}&uuid=${uuid}&v=5.131"
+        var yourEndpoint = "https://api.vk.com/method/auth.exchangeSilentAuthToken"
+        val yourServiceToken = SuperappApiCore.anonymousTokenProvider?.getToken()
+        var postQuery = "access_token=${yourServiceToken}&token=${silentToken}&uuid=${uuid}&v=5.141"
+        val identifier = context.resources.getIdentifier("test_endpoint", "string", context.packageName)
+        if (identifier != 0) {
+            yourEndpoint = context.getString(identifier)
+            postQuery += "&silent_token=${silentToken}&app_id=${VK.getAppId(context)}"
+        }
+        Log.d("endpoint", yourEndpoint)
         val request = Request.Builder()
             .url(yourEndpoint)
             .post(postQuery.toRequestBody())
             .build()
-        return JSONObject(OkHttpClient().newCall(request).execute().body!!.string())
+        val answer = OkHttpClient().newCall(request).execute().body!!.string()
+        return JSONObject(answer)
             .getJSONObject("response")
     }
 }

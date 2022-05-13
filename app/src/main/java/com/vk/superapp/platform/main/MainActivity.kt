@@ -31,8 +31,9 @@ package com.vk.superapp.platform.main
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.vk.api.sdk.VK
 import com.vk.auth.main.VkClientAuthLib
-import com.vk.auth.passport.VkPassportView
+import com.vk.superapp.bridges.superappApi
 import com.vk.superapp.platform.R
 
 /**
@@ -49,12 +50,29 @@ class MainActivity : AppCompatActivity() {
 
     private val authCallback = object : com.vk.auth.main.VkClientAuthCallback {
         override fun onAuth(authResult: com.vk.auth.api.models.AuthResult) {
-            android.util.Log.d("MainActivity", authResult.toString())
-            Toast.makeText(
-                this@MainActivity,
-                "You're logged in! \n${authResult.accessToken}",
-                Toast.LENGTH_SHORT
-            ).show()
+            superappApi.account.sendGetUserMyInfo(
+                VK.getAppId(
+                    this@MainActivity.applicationContext).toLong(),
+                0
+            ).subscribe {
+                val info = it.getJSONArray("response")
+                if (info.length() > 0) {
+                    val firstUser = info.getJSONObject(0)
+                    Toast.makeText(
+                        this@MainActivity,
+                        "${firstUser.getInt("id")} " +
+                                "${firstUser.getString("first_name")} " +
+                                firstUser.getString("last_name"),
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "No users found!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
     }
 

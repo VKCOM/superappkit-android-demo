@@ -38,7 +38,8 @@ internal object VkDevUtils {
 
             // Sets the implementation for exchanging silent token strategy
             // Warning! You should use your own implementation of VkSilentTokenExchanger
-            .setSilentTokenExchanger(VkSilentTokenExchangerImpl())
+            .setSilentTokenExchanger(VkSilentTokenExchangerImpl(context))
+            .sslPinningEnabled(false)
 
             .build()
 
