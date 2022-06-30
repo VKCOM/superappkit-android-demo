@@ -35,6 +35,7 @@
     android:orientation="vertical">
 
         <com.vk.auth.ui.fastloginbutton.VkFastLoginButton
+            android:id="@+id/fast_login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"/>

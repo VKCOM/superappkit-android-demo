@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     private val authCallback = object : com.vk.auth.main.VkClientAuthCallback {
         override fun onAuth(authResult: com.vk.auth.api.models.AuthResult) {
-            superappApi.account.sendGetUserMyInfo(
+            superappApi.users.sendGetUserMyInfo(
                 VK.getAppId(
                     this@MainActivity.applicationContext).toLong(),
                 0

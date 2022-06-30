@@ -1,7 +1,7 @@
 buildscript {
 
     ext {
-        sakVersion = "0.82-24368"
+        sakVersion = project.getProperties().get("SAK_VERSION")
         kotlinVersion = '1.6.20'
         minSdkSakVersion = 21
         compileSdkSakVersion = 31

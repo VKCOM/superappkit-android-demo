@@ -37,4 +37,7 @@
 
     <!-- VK (OAuth) for external services: Use template vk<com_vk_sdk_AppId>://vk.com -->
     <string name="vk_external_oauth_redirect_url" translatable="false"></string>
+
+    <!-- AccountType for system AccountManager. Template: <packageName>.account.vk -->
+    <string name="vk_account_manager_id" translatable="false">com.vk.superapp.platform.account.vk</string>
 </resources>
