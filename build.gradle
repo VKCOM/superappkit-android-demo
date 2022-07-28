@@ -2,6 +2,7 @@ buildscript {
 
     ext {
         sakVersion = project.getProperties().get("SAK_VERSION")
+        allureVersion = '2.4.0'
         kotlinVersion = '1.6.20'
         minSdkSakVersion = 21
         compileSdkSakVersion = 31
